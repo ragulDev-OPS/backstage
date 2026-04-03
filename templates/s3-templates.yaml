@@ -22,7 +22,7 @@ spec:
       name: Fetch Terraform Code
       action: fetch:template
       input:
-        url: file:./terraform/s3
+        url: https://github.com/ragulDev-OPS/backstage/archive/refs/heads/main.zip
         values:
           bucket_name: ${{ parameters.bucket_name }}
 
