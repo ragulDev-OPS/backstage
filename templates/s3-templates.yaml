@@ -1,0 +1,40 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: create-s3-bucket
+  title: Create S3 Bucket
+  description: Provision S3 bucket using Terraform
+spec:
+  owner: user:guest
+  type: service
+
+  parameters:
+    - title: S3 Bucket Details
+      required:
+        - bucket_name
+      properties:
+        bucket_name:
+          title: Bucket Name
+          type: string
+
+  steps:
+    - id: fetch-template
+      name: Fetch Terraform Code
+      action: fetch:template
+      input:
+        url: file:./terraform/s3
+        values:
+          bucket_name: ${{ parameters.bucket_name }}
+
+    - id: run-terraform
+      name: Run Terraform
+      action: execute:command
+      input:
+        command: |
+          terraform init
+          terraform apply -auto-approve -var="bucket_name=${{ parameters.bucket_name }}"
+
+  output:
+    links:
+      - title: Bucket Created
+        url: https://s3.console.aws.amazon.com/s3
